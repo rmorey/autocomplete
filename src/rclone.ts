@@ -1,10 +1,16 @@
-// TODO: dynamically suggest paths
+const remoteGenerator = {
+  script: "rclone listremotes",
+  postProcess: (list) => list.split("\n").map((remote) => ({ name: remote })),
+};
+const pathGenerator = {
+  script: (tokens) => `rclone lsf ${tokens[2]}`,
+  postProcess: (list, tokens) =>
+    list.split("\n").map((path) => ({ name: `${tokens[2]}${path}` })),
+};
+
 const remote: Fig.Arg = {
   name: "remote:",
-  generators: {
-    script: "rclone listremotes",
-    postProcess: (list) => list.split("\n").map((remote) => ({ name: remote })),
-  },
+  generators: remoteGenerator,
 };
 const hashes = [
   "MD5",
@@ -34,18 +40,18 @@ const cryptedremote: Fig.Arg = {
   generators: remote.generators,
   // TODO filter by crypted type
 };
-// TODO dynamically sugest path
+
 const remotePath: Fig.Arg = {
   name: "remote:path",
-  generators: remote.generators,
+  generators: [remoteGenerator, pathGenerator],
 };
 const sourcePath: Fig.Arg = {
   name: "source:path",
-  generators: remote.generators,
+  generators: remotePath.generators,
 };
 const destPath: Fig.Arg = {
   name: "dest:path",
-  generators: remote.generators,
+  generators: remotePath.generators,
 };
 const checkFlags: Array<Fig.Option> = [
   {
