@@ -281,12 +281,30 @@ const completionSpec: Fig.Spec = {
                 description:
                   "Lists duplicate dirs and files only and changes nothing",
               },
-              ...["first", "newest", "oldest", "largest", "smallest"].map(
-                (_) => ({
-                  name: _,
-                  description: `removes identical files then keeps the ${_} one.`,
-                })
-              ),
+              {
+                name: "first",
+                description: "Removes identical files then keeps the first one",
+              },
+              {
+                name: "newest",
+                description:
+                  "Removes identical files then keeps the newest one",
+              },
+              {
+                name: "oldest",
+                description:
+                  "Removes identical files then keeps the oldest one",
+              },
+              {
+                name: "largest",
+                description:
+                  "Removes identical files then keeps the largest one",
+              },
+              {
+                name: "smallest",
+                description:
+                  "Removes identical files then keeps the smallest one",
+              },
             ],
           },
         },
@@ -315,16 +333,36 @@ const completionSpec: Fig.Spec = {
       name: "genautocomplete",
       description: "Output completion script for a given shell",
       subcommands: [
-        ...["bash", "fish", "zsh"].map((_) => ({
-          name: _,
-          description: `Output ${_} completion script for rclone.`,
+        {
+          name: "bash",
+          description: "Output bash completion script for rclone",
           args: {
             name: "output_file",
             isOptional: true,
             description:
               'If output_file is "-", then the output will be written to stdout',
           },
-        })),
+        },
+        {
+          name: "fish",
+          description: "Output fish completion script for rclone",
+          args: {
+            name: "output_file",
+            isOptional: true,
+            description:
+              'If output_file is "-", then the output will be written to stdout',
+          },
+        },
+        {
+          name: "zsh",
+          description: "Output zsh completion script for rclone",
+          args: {
+            name: "output_file",
+            isOptional: true,
+            description:
+              'If output_file is "-", then the output will be written to stdout',
+          },
+        },
       ],
     },
     {
@@ -445,18 +483,13 @@ const completionSpec: Fig.Spec = {
           args: {
             name: "format",
             suggestions: [
-              ...[
-                ["p", "path"],
-                ["s", "size"],
-                ["t", "modification time"],
-                ["h", "hash"],
-                ["i", "ID of object"],
-                ["o", "Original ID of underlying object"],
-                ["m", "MimeType of object if known"],
-              ].map((_) => ({
-                name: _[0],
-                description: _[1],
-              })),
+              { name: "p", description: "Path" },
+              { name: "s", description: "Size" },
+              { name: "t", description: "Modification time" },
+              { name: "h", description: "Hash" },
+              { name: "i", description: "ID of object" },
+              { name: "o", description: "Original ID of underlying object" },
+              { name: "m", description: "MimeType of object if known" },
             ],
           },
         },
@@ -619,7 +652,27 @@ const completionSpec: Fig.Spec = {
     {
       name: "serve",
       description: "Serve a remote over a protocol",
-      args: {},
+      args: [
+        {
+          name: "protocol",
+          suggestions: [
+            { name: "dlna", description: "Serve remote:path over DLNA" },
+            {
+              name: "docker",
+              description: "Serve remote:path on docker's volume plugin API",
+            },
+            { name: "ftp", description: "Serve remote:path over FTP" },
+            { name: "http", description: "Serve remote:path over HTTP" },
+            {
+              name: "restic",
+              description: "Serve remote:path for restic's REST API",
+            },
+            { name: "sftp", description: "Serve remote:path over SFTP" },
+            { name: "webdav", description: "Serve remote:path over WebDAV" },
+          ],
+        },
+        remotePath,
+      ],
     },
     {
       name: "settier",
